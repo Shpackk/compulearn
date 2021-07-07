@@ -2,6 +2,7 @@ const socket = io()
 const messagesContainer = document.getElementById('messages')
 const form = document.getElementById('form')
 const usersInput = document.getElementById('input')
+const roomChange = document.getElementById('randomroom')
 
 form.addEventListener('submit', e => {
     e.preventDefault()
@@ -11,9 +12,18 @@ form.addEventListener('submit', e => {
     }
 })
 
+roomChange.addEventListener('click', () => {
+    socket.emit('roomjoin')
+    drawMessage('Joined Room')
+})
+
 socket.on('message', msg => {
+    drawMessage(msg)
+})
+
+function drawMessage(msg) {
     const item = document.createElement('li')
     item.textContent = msg
     messagesContainer.appendChild(item)
     window.scrollTo(0, document.body.scrollHeight)
-})
+}

@@ -14,8 +14,17 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
     socket.on('message', (msg) => {
-        io.emit('message', msg);
+        if (socket.room) {
+            io.to(socket.room).emit('message', msg)
+        } else {
+            io.emit('message', msg);
+        }
     });
+    socket.on('roomjoin', () => {
+        const room = 'room'
+        socket.room = room
+        socket.join(room)
+    })
 });
 
 server.listen(PORT, () => {
